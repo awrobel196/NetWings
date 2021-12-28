@@ -1,4 +1,25 @@
-# Dokumentacja NetWings ![alt text](https://img.shields.io/badge/Wersja-1.0-green)
+# Dokumentacja NetWings ![alt text](https://img.shields.io/badge/Aplikacja-1.0-blue) ![alt text](https://img.shields.io/badge/Dokumentacja-1.2-green)
+![Netwings logo](https://github.com/awrobel196/NetWings/blob/main/src/WebUI/wwwroot/assets/logo-dark.png?raw=true)
+
+## Netwings
+#### O aplikacji
+NetWings to aplikacja webowa pozwalająca na monitoring stron internetowych pod kątem ich dostępności, jakości oraz bezpieczeństwa. Platforma agreguje dane pobierane przy użyciu publicznych API i w prosty spoób przedstawia je użytkownikowi. Głównym mechanizmem platformy jest monitorowanie staturu `up` oraz `down` dodanej przez użytkownika strony internetowej. Wszelkie zmiany w tym zakresie zgłaszane są użytkownikowy za pomocą bramki SMS. 
+
+#### Użytkownicy
+Aby skorzystać z platformy użytkownik musi założyć na niej konto podając imię, nazwisko, adres email, hasło oraz numer telefonu (na który przesyłane będą wiadomości sms dotyczące dostępności strony). Użytkownik po zarejestrowaniu nowego konta może dodać strony które będą monitorowane przez system, a uzyskane wyniki przedstawiane zostaną danemu użytkownikowi. W ramach swojego konta, użytkownik może wygenerować link do rejestracji, przy użyciu którego będzie możliwość utworzenia nowego konta i dostęp do tych samych stron co dodane na koncie w którym wygenerowano wyżej wymieniony link. 
+
+## Infrastruktura platformy
+Platforma NetWings składa się z dwóch głownych modułów:
+- `src` -> część przechowująca aplikację Webową wraz z warstwą dostępu do danych
+- `machines` -> część przechowywująca maszyny monitorujące dodane strony internetowe
+
+#### Machines
+Na część maszyn składają się 4 instancje Azure Function, które odpowiadają za monitoring i aktualizację stanu stron dodanych do platformy. Na maszyny składają się następujące instancje:
+- `BenchmarkMachineRoot` -> maszyna uruchamiana co 20 minut, której zadaniem jest sprawdzenie czy wszystkie strony posiadają aktualny raport wyniku benchmark przeprowadzonego za pomocą GTMetrix
+- `BenchmarkMachineWorker` -> maszyna uruchamiana codziennie o 23:20, której zadaniem jest otworzenie każdego z raportu zapisanego przez `BenchmarkMachineRoot` i odczytanie wyniku każdej ze stron
+- `UptimeMachineRoot` -> maszyna uruchamiana co minutę, jej zadaniem jest pobranie wszystkich stron z bazy i rozpoczęcie testów Uptime
+- `UptimeMachineWorker` -> maszyna przy pomocy wywołania HTTP przez `UptimeMachineRoot`, jej zadanie to wyslanie żądania do otrzymanej strony internetowej i zapisanie wyniku w bazie dotyczącego dostępności danej strony
+
 
 ## Mechanizm logowania
 Strona logowania zwracana jest przez kontroler `LoginController`w akcji `Index`. W zależności od źródła, które prowadzi do strony logowania jako parametry adresu przekazywane mogą być różne wartości parametru `type`:
@@ -61,4 +82,20 @@ public class UptimeBenchmarkController : Controller
 }
 ```
 
+## Hosting platformy
+
+#### Aplikacja webowa  - 🐳 Docker  + Plesk Linux
+Aplikacja webowa hostowana jest przy pomocy serwera Linux wyposażonego w panel administracyjny Plesk. Aby wykonać poniższe kroki, wymagane jest posiadanie zainstalowanego środowiska Plesk oraz rozszerzenia do panelu administracyjnego plesk o nazwie Docker. Aby uruchomić aplikację należy:
+
+1. Otwórz konsolę w katalogu głównym (NetWings)
+2. Zbuduj nowy obraz docker `docker build -t webui .`
+3. Otaguj zbudowany obraz `docker tag webui:latest netwings/webui:0.0.1`
+4. Zapisz zbudowany obraz jako archiwum w formacie .tar `docker save netwings/webui -o netwingsportal.tar
+5. Wyślij zbudowane archiwum w formacie .tar na serwer VPS
+6. Połącz się z VPS przy użyciu SSH i przejdź do lokalizacji gdzie zostało przesłane archiwum z obrazem
+7. Załaduj obraz docker używając komendy `docker load -i netwingsportal.tar`
+8. Zaloguj się do panelu Plesk, przejdź do zakładki Docker uruchom nowy kontener z obrazu Netwingsportal wybierając jego aktualną wersję
+9. W czasie tworzenia kontenera odznacz opcję *Automatic port mapping*
+10. Po zbudowaniu kontenera wejdź w zakładkę *Settings* danego kontenera i w sekcji *Manual mapping* wpisz port pod którym dostępna będzie aplikacja
+11. Przejdź w zakładkę Websites & Domains -> [Domena] -> Docker proxy Ruler i wybierz dodany kontener
 
