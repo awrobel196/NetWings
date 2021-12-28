@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+
+<head>
+   
+
+    <link rel="stylesheet" href="~/styles/reset.css">
+    <link rel="stylesheet" href="~/styles/styles.css"/>
+    <link rel="stylesheet" href="~/styles/styles-mobile.css" media="only screen and (max-device-width: 767px)"/>
+    <link rel="icon" type="image/x-icon" href="~/assets/logo.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @RenderSection("Styles", false)
+</head>
+
+<body>
+    <div class="content">
+
+        <div class="fake-left-nav"></div>
+        <div class="left-nav">
+
+            <div class="menu-item-logo">
+                <div class="menu-image">
+                    <a asp-controller="Home" asp-action="Index"><img src="~/assets/logo.png" /></a>
+                </div>
+            </div>
+
+            <div class="menu-items">
+
+
+                <div class="menu-item" id="menu-home" onclick="$('.link-home')[0].click();">
+                    <div class="menu-image">
+                        <img src="~/assets/taas.svg">
+                    </div>
+                    <div class="menu-title">
+
+                        <p><a asp-controller="Home" asp-action="Index" class="link-home">Home</a></p>
+                    </div>
+                </div>
+
+
+
+
+                <div class="menu-item" id="menu-uptime" onclick="$('.link-uptime')[0].click();">
+                    <div class="menu-image">
+                        <img src="~/assets/paas.svg">
+                    </div>
+                    <div class="menu-title">
+                        <p><a asp-controller="UptimeBenchmark" asp-action="Index" class="link-uptime">Uptime</a></p>
+                    </div>
+                </div>
+
+
+
+                <div class="menu-item" id="menu-response" onclick="$('.link-response')[0].click();">
+                    <div class="menu-image">
+                        <img src="~/assets/baas.svg">
+                    </div>
+                    <div class="menu-title">
+                        <p><a asp-controller="ResponseBenchmark" asp-action="Index" class="link-response">Response</a></p>
+                    </div>
+                </div>
+
+                <div class="menu-item" id="menu-license" onclick="$('.link-license')[0].click();">
+                    <div class="menu-image">
+                        <img src="~/assets/oaas.svg">
+                    </div>
+                    <div class="menu-title">
+                        <p><a asp-controller="License" asp-action="Index" class="link-license">Licencja</a></p>
+                    </div>
+                </div>
+
+                <div class="menu-item" id="menu-settings" onclick="$('.link-zasoby')[0].click();">
+                    <div class="menu-image">
+                        <img src="~/assets/kaas.svg">
+                    </div>
+                    <div class="menu-title">
+                        <p><a asp-controller="Website" asp-action="Index" class="link-zasoby">Zasoby</a></p>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="item-hide-menu" onclick="closeMenu()"> <i class="fas fa-times"></i></div>
+
+        </div>
+
+        <div class="right-section">
+            <div class="header">
+                <div class="menu" onclick="openMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <a asp-controller="Login" asp-action="Logout" class="logout-button">Wyloguj</a>
+               
+            </div>
+            @RenderBody()
+
+        </div>
+
+    </div>
+
+
+</body>
+<footer>
+    @RenderSection("Scripts", false)
+    <script src="https://kit.fontawesome.com/f7c0aeec9d.js" crossorigin="anonymous"></script>
+    <script src="~/scripts/scripts.js"></script>
+</footer>

@@ -1,0 +1,42 @@
+﻿@model List<Application.ViewModels.Website.Details.WebsiteGradeViewModel>
+
+<table>
+    <thead>
+    <td style="text-align: left;">Nazwa strony</td>
+    <td class="align-center mobile-hide">TTFB</td>
+    <td class="align-center">Całkowite ładowanie</td>
+    <td class="align-center mobile-hide">Pierwsza interakcja</td>
+    <td class="align-center">Rozmiar</td>
+    <td class="align-center">Ocena</td>
+    </thead>
+   
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="text-align: left;">
+               
+                    <p class="website-title">@item.TestDate</p>
+
+            </td>
+            
+                <td class="align-center mobile-hide">@item.TTFB ms</td>
+                <td class="align-center">@item.FullLoad ms</td>
+                <td class="align-center mobile-hide">@item.FirstInteraction ms</td>
+                <td class="align-center">@item.Size MB</td>
+                <td class="align-center grade-col">
+                    <div class="grade grade-@item.Grade">
+                        @item.Grade
+                    </div>
+                </td>
+            
+           
+        </tr>
+    }
+
+
+</table>
+
+<script>
+  
+
+</script>

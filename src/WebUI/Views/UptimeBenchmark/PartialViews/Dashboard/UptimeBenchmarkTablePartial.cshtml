@@ -1,0 +1,266 @@
+﻿@model List<Application.ViewModels.UptimeBenchmark.UptimeBenchmarkDashboardViewModel>
+
+<table>
+    <thead>
+    <td style="width: 15%; text-align: left;">Nazwa strony</td>
+    <td style="width: 10%">Status</td>
+    <td style="width: 10%">Uptime</td>
+    <td style="width: 10%">Ostatni test</td>
+    <td class="td-uptime-graph" style="width: 55%">Uptime graf</td>
+    </thead>
+
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            @if (item.Uptime == "NaN")
+            {
+
+                <td style="text-align: left;">
+                    <a asp-controller="Website" asp-action="Details" asp-route-idWebsite="@item.IdWebsite">
+                        <p class="website-title">@item.WebsiteName</p>
+                        <p class="website-url">@item.WebsiteUrl</p>
+                    </a>
+                </td>
+
+                <td colspan="4">
+
+                    <p style="margin-bottom: 6px; font-weight: 400;">Brak danych dla tego zasobu</p>
+                    <p style="font-size: 13px; font-weight: 300">
+                        Za chwilę dane o tej stronie powinny być dostępne
+                    </p>
+                </td>
+            }
+            else
+            {
+                <td style="text-align: left;">
+                    <a asp-controller="Website" asp-action="Details" asp-route-idWebsite="@item.IdWebsite">
+                        <p class="website-title">@item.WebsiteName</p>
+                        <p class="website-url">@item.WebsiteUrl</p>
+                    </a>
+                </td>
+                <td class="uptime-td">
+                    <div class="uptime-status uptime-status-@item.Status">@item.Status</div>
+                </td>
+                <td>@item.Uptime %</td>
+                <td>@item.LatestTestTime s. temu</td>
+                <td class="td-uptime-graph" style="padding: 0px;">
+                    <div id="chart@(item.IdForChar)" style="margin-top: -20px; margin-bottom: -20px;"></div>
+                </td>
+            }
+
+        </tr>
+    }
+
+
+</table>
+<div class="divider-15"></div>
+<div class="divider-15"></div>
+@foreach (var item in Model)
+{
+    <script>
+            var options@(item.IdForChar) = {
+            stroke: {
+                curve: 'straight',
+                width: 2, //ustawia odstwpy miedzy kwadratami
+            },
+            chart: {
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 400,
+                    animateGradually: {
+                        enabled: true,
+                        delay: 150
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 350
+                    }
+                },
+                toolbar: {
+                    show: false
+                },
+                height: '110',
+                type: "heatmap"
+            },
+            colors: ["#0057fc"],
+            dataLabels: {
+                enabled: false
+            },
+            plotOptions: {
+                heatmap: {
+                    enableShades: false,
+
+                    colorScale: {
+                        ranges: [{
+                                from: 200,
+                                to: 206,
+                                name: 'low',
+                                color: '#0057fc'
+                            },
+                            {
+                                from: 400,
+                                to: 511,
+                                name: 'medium',
+                                color: '#ff0000'
+                            },
+                            {
+                                from: 999,
+                                to: 999,
+                                name: 'medium',
+                                color: '#f5f5f5'
+                            },
+                            {
+                                from:0,
+                                to:199,
+                                name: 'medium',
+                                color: '#ffe500'
+                            },
+                            {
+                                from:300,
+                                to:399,
+                                name: 'medium',
+                                color: '#ffe500'
+                            }
+
+                        ]
+                    }
+                }
+            },
+
+            series: [{
+                name: "series1",
+                data: [
+        @foreach (var note in item.UptimeChar.GetRange(0, 60))
+        {
+            @:{
+            @:x: "category 1",
+            @:y: @(note.UptimeStatusChar),
+            @:description: "@(note.UptimeTestTimeChar)",
+            @:},
+        }
+                    ]
+                },
+
+                {
+                name: "series1",
+                data: [
+        @foreach (var note in item.UptimeChar.GetRange(60, 60))
+        {
+            @:{
+            @:x: "category 1",
+            @:y: @(note.UptimeStatusChar),
+            @:description: "@(note.UptimeTestTimeChar)",
+            @:},
+        }
+                    ]
+                },
+
+                {
+                    name: "series1",
+                    data: [
+        @foreach (var note in item.UptimeChar.GetRange(120, 60))
+        {
+            @:{
+            @:x: "category 1",
+            @:y: @(note.UptimeStatusChar),
+            @:description: "@(note.UptimeTestTimeChar)",
+            @:},
+        }
+                    ]
+                },
+
+                {
+                    name: "series1",
+                    data: [
+        @foreach (var note in item.UptimeChar.GetRange(180, 60))
+        {
+            @:{
+            @:x: "category 1",
+            @:y: @(note.UptimeStatusChar),
+            @:description: "@(note.UptimeTestTimeChar)",
+            @:},
+        }
+                    ]
+                },
+            ],
+
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.6,
+                    opacityTo: 0.0,
+                    stops: [0, 90, 100]
+                }
+            },
+            grid: {
+                show: false
+            },
+            yaxis: {
+                show: false
+            },
+
+            tooltip: {
+                custom: function(opts) {
+                    const desc =
+                        opts.ctx.w.config.series[opts.seriesIndex].data[
+                            opts.dataPointIndex
+                        ].description;
+
+                    const value = opts.series[opts.seriesIndex][opts.dataPointIndex];
+
+                    var color = "";
+                    if (value === 200) {
+                        color = "#0057FC"
+                    } else {
+                        color = "#ff0000"
+                    }
+
+                    return `
+                    <div class="apexcharts-tooltip-title" style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; text-align:left">`+desc+`</div>
+                       <div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">
+                           
+                           <span class="apexcharts-tooltip-marker" style="background-color: `+color+`"></span>
+        <div class="apexcharts-tooltip-text" style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
+            <div class="apexcharts-tooltip-y-group"><span class="apexcharts-tooltip-text-y-label">Response: </span><span class="apexcharts-tooltip-text-y-value">`+value+`</span></div>
+            <div class="apexcharts-tooltip-goals-group"><span class="apexcharts-tooltip-text-goals-label"></span><span class="apexcharts-tooltip-text-goals-value"></span></div>
+            <div class="apexcharts-tooltip-z-group"><span class="apexcharts-tooltip-text-z-label"></span><span class="apexcharts-tooltip-text-z-value"></span></div>
+        </div>
+    </div>
+                    `;
+                }
+            },
+
+            xaxis:
+            {
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false,
+                },
+                labels: {
+                    show: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+
+            },
+
+            legend: {
+                show: false
+            },
+            //tooltip: {
+            //    enabled: false
+            //}
+        };
+
+        var chart@(item.IdForChar) = new ApexCharts(document.querySelector("#chart@(item.IdForChar)"), options@(item.IdForChar));
+
+        chart@(item.IdForChar).render();
+    </script>
+
+}

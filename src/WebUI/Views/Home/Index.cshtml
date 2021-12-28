@@ -1,0 +1,41 @@
+﻿<div class="content">
+    <div class="breadcrumbs">
+        <h1>Kokpit</h1>
+    </div>
+
+    <h2>Ostatnie awarie zasobów</h2>
+    <div class="divider-15"></div>
+
+    <div class="breakdown-container" id="breakdown-container">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="divider-15"></div>
+ 
+    <h2>Zasoby wymagające poprawy</h2>
+    <div class="divider-15"></div>
+    <div class="breakdown-container" id="improvement-container">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $("#menu-home").addClass("active");
+        $("#breakdown-container").load("../Home/BreakDownWebsitePartial");
+        $("#improvement-container").load("../Home/WebsiteForImprovementPartial");
+    </script> 
+}
+    
+

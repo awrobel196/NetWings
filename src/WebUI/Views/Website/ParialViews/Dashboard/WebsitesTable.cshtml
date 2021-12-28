@@ -1,0 +1,105 @@
+﻿@model List<Application.ViewModels.Website.WebsitesListViewModel>
+
+<input type="text" id="websiteIdForDelete" class="display-none" />
+<div class="table-items">
+    <table>
+        <thead>
+        <td style="width: 15%; text-align: left;">Nazwa strony</td>
+        <td>Adres Url</td>
+        <td>Lokalizacja</td>
+        <td class="mobile-hide">Środowisko</td>
+        <td class="mobile-hide">Ostatni test</td>
+        <td>Operacje</td>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: left;">
+                    <a asp-controller="Website" asp-action="Details" asp-route-idWebsite="@item.IdWebsite">
+                        <p class="website-title">@item.Name</p>
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="Website" asp-action="Details" asp-route-idWebsite="@item.IdWebsite">
+                       @item.Url
+                    </a>
+                </td>
+                <td><img src="~/assets/flags/@(item.Location).svg" style="height: 30px" /></td>
+                <td class="mobile-hide"><img src="~/assets/@(item.Enviroment).svg" style="height: 30px" /></td>
+                <td class="mobile-hide">@item.LastTestedByBenchmark</td>
+                <td>
+                    <a class="license-delete" data-micromodal-trigger="modal-2" onclick="setWebsiteIdForDelte('@item.IdWebsite')">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
+
+<div class="divider-15"></div>
+<div class="divider-15"></div>
+
+
+<div class="modal micromodal-slide" id="modal-2" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+
+            <main class="modal__content" id="modal-1-content">
+                <p style="text-align: center; font-size: 17px; font-weight: 500;" class="head">
+                    Czy na pewno chcesz usunąć zasób?
+                </p>
+                <div class="divider-10"></div>
+                <p style="text-align: center">
+                    Kiedy usuniesz wybrany zasób wszystkie osoby w obrębie Twojej licencji stracą dostęp do jego archiwalnych oraz przyszłych wyników testów.
+                </p>
+                <div class="divider-15"></div>
+                <div class="button-section">
+                    <button class="undo-operation" data-micromodal-close>Anuluj operację</button>
+                    <button class="delete-user" onclick="delteWebsite()">Usuń zasób</button>
+                </div>
+
+
+            </main>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    MicroModal.init();
+
+    var redirectType = getParameterByName('type');
+    if (redirectType === "success") {
+        $("#delete-succesfull").removeClass("display-none");
+    }
+
+    function setWebsiteIdForDelte(IdWebsite) {
+        $("#websiteIdForDelete").val(IdWebsite);
+    }
+
+    function delteWebsite() {
+        var idWebsite =  $("#websiteIdForDelete").val();
+        $.ajax({
+            type: "POST",
+            url: "../Website/DeleteWebsite",
+            data: { idWebsite: idWebsite},
+            dataType: "json",
+            success:  function(msg) {
+                window.location.replace("../Website/Index?type=success");
+                }
+        });
+    }
+
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+</script>

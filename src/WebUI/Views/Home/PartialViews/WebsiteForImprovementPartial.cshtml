@@ -1,0 +1,54 @@
+﻿@model List<Application.ViewModels.Home.WebsiteForImprovement>
+
+
+<table>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+             <td style="text-align: center;">
+                <div class="grade grade-@(item.Grade)" style="margin-left: 20px">
+                    @item.Grade
+                </div>
+            </td>
+            <td style="text-align: center;">
+                <a asp-controller="Website" asp-action="Details" asp-route-idWebsite="@item.IdWebsite">
+                    <p class="website-title">@item.WebsiteName</p>
+                    <p class="website-url">@item.WebsiteUrl</p>
+                </a>
+            </td>
+            <td style="text-align: center;">
+               
+                    <p class="website-title">@item.TestTime</p>
+                    <p class="website-url">Data testu</p>
+               
+            </td>
+            <td style="text-align: center;">
+                <p class="website-title">@item.TTFB ms</p>
+                <p class="website-url">TTFB</p>
+            </td>
+            <td style="text-align: center;" class="mobile-hide">
+                <p class="website-title">@item.FullLoad ms</p>
+                <p class="website-url">Całkowite ładowanie</p>
+            </td>
+
+            <td style="text-align: center;" class="mobile-hide">
+                <p class="website-title">@item.FirstInteraction ms</p>
+                <p class="website-url">Pierwsza interakcja</p>
+            </td>
+            
+            <td style="text-align: center;">
+                <p class="website-title">@item.Size ms</p>
+                <p class="website-url">Rozmiar</p>
+            </td>
+            
+           
+
+
+
+        </tr>
+        <tr class="empty"></tr>
+    }
+
+
+</table>

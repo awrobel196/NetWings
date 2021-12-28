@@ -1,0 +1,60 @@
+﻿@using System.Collections.Specialized
+@using Application.ViewModels
+
+
+
+
+<div class="content">
+    <div class="breadcrumbs">
+        <h1>Uptime benchmark</h1>
+        <a asp-controller="Website" asp-action="Create">
+            <div class="add-button">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+        </a>
+
+    </div>
+
+
+
+    <div class="shortcuts-items">
+        @foreach (EnumToListViewModel item in ViewBag.TestEnviroment)
+        {
+            <div class="item" onclick="loadElementsByCountry('@item.Value','@item.Key')" data-key="@item.Key">
+                <img src="assets/flags/@(item.Value).svg">
+                <p>@item.Value</p>
+            </div>
+        }
+    </div>
+
+    <div class="table-items">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $("#menu-uptime").addClass("active");
+
+        $(".table-items").load("UptimeBenchmark/UptimeBenchmarkTablePartial");
+        $(".item").first().addClass("item-active");
+
+        function loadElementsByCountry(location, key) {
+            $(".table-items").html("<div class='lds-ring'><div></div><div></div><div></div><div></div></div>");
+            $(".table-items").load("UptimeBenchmark/UptimeBenchmarkTablePartial?location="+location+"");
+            setActiveItem(key);
+        }
+
+        function setActiveItem(key) {
+            $(".item").removeClass("item-active");
+            $("div[data-key='"+key+"']").addClass("item-active");
+        }
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+}

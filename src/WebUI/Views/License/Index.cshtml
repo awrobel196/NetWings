@@ -1,0 +1,45 @@
+﻿
+
+
+
+<div class="content">
+    <div id="delete-succesfull" class="correct-message display-none">
+       Pomyślnie usunięto wybranego użytkownika z Twojej licencji.
+    </div>
+
+     <div id="delete-fail" class="validation-error display-none">
+      Uwaga! Nie możesz usunąć swojego konta jeśli jesteś jedynym członkiem licencji.
+    </div>
+    <div class="breadcrumbs">
+        <h1>Twoja licencja</h1>
+    </div>
+
+    <div class="license-details-container">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+@section Styles
+{
+    <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+<link rel="stylesheet" href="~/styles/micromodal.css">
+}
+
+
+@section Scripts
+{
+<script>
+    $(".license-details-container").load("../License/LicenseDetailsPartial");
+    $("#menu-license").addClass("active");
+</script>
+}

@@ -1,0 +1,39 @@
+﻿@model Application.ViewModels.Website.Details.WebsiteTimingsViewModel
+<div class="item">
+    <p class="item-title">Redirect Duration</p>
+    <p class="item-value">@Model.RedirectDuration ms</p>
+</div>
+
+
+<div class="item">
+    <p class="item-title">Connection Duration</p>
+    <p class="item-value">@Model.ConnectionDuration ms</p>
+</div>
+<div class="item">
+    <p class="item-title">Backend Duration</p>
+    <p class="item-value">@Model.BackendDuration ms</p>
+</div>
+<div class="item">
+    <p class="item-title">Time to First Byte</p>
+    <p class="item-value">@Model.TTFB ms</p>
+</div>
+<div class="item">
+    <p class="item-title">First Paint</p>
+    <p class="item-value">@Model.FirstPain ms</p>
+</div>
+<div class="item">
+    <p class="item-title">DOM Interactive Time</p>
+    <p class="item-value">@Model.DOMInteractiveTime ms</p>
+</div>
+<div class="item">
+    <p class="item-title">DOM Content Loaded Time </p>
+    <p class="item-value">@Model.DOMContentLoadTime ms</p>
+</div>
+<div class="item">
+    <p class="item-title">Onload Time</p>
+    <p class="item-value">@Model.OnloadTime ms</p>
+</div>
+<div class="item">
+    <p class="item-title">Fully Loaded Time</p>
+    <p class="item-value">@Model.FullyLoadedTime ms</p>
+</div>

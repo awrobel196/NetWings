@@ -1,0 +1,126 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="~/styles/reset.css">
+    <link rel="stylesheet" href="~/styles/styles.css"/>
+    <link rel="stylesheet" href="~/styles/styles-mobile.css" media="only screen and (max-device-width: 767px)"/>
+    <link rel="icon" type="image/x-icon" href="/assets/logo.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+
+<body class="body-login">
+    <div class="login-container">
+        <img src="~/assets/logo-white.png" />
+        <div class="login-form">
+
+            <p>Zaloguj się</p>
+            <div class="incorrect-login display-none">
+                Nieprawidłowy email/hasło
+            </div>
+            <div id="register-succesfull" class="correct-login display-none">
+                Pomyślnie utworzono konto. Teraz możesz się zalogować
+            </div>
+            
+            <div id="logout-succesfull" class="correct-login display-none">
+                Pomyślnie wylogowano z systemu
+            </div>
+            <div class="divider-15"></div>
+            <div class="divider-15"></div>
+            <input type="text" placeholder="Adres email" id="email">
+            <div class="divider-10"></div>
+            <input type="password" placeholder="Hasło" id="password">
+
+            <a onclick="tryLogin()">Zaloguj</a>
+            <div class="divider-10"></div>
+            <span>Nie masz jeszcze konta? <a asp-controller="Register" asp-action="Index">Zarejestruj się!</a></span>
+            <div class="divider-10"></div>
+        </div>
+
+        <div class="lottie-login-form display-none">
+            <lottie-player id="lottie-waiting" src="https://assets2.lottiefiles.com/packages/lf20_bgqoyj8l.json" 
+                           background="transparent" speed="1" style="width: 300px; height: 450px;" loop autoplay></lottie-player>
+            <lottie-player class="display-none" id="lottie-correct" src="https://assets9.lottiefiles.com/packages/lf20_tubq79fg.json" 
+                           background="transparent" speed="1" style="width: 300px; height: 450px;"></lottie-player>
+            <p id="login-loader-text">Trwa uwierzytelnianie</p>
+        </div>
+    </div>
+
+    <div class="banner_background">
+    </div>
+
+</body>
+
+<footer>
+    <script src="https://unpkg.com/@@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script>
+        var redirectType = getParameterByName('type');
+        if (redirectType === "register") {
+            $("#register-succesfull").removeClass("display-none");
+        }else if (redirectType === "logout") {
+            $("#logout-succesfull").removeClass("display-none");
+        }
+
+
+        function tryLogin() {
+
+            $(".lottie-login-form").removeClass("display-none");
+            $(".login-form").addClass("display-none");
+            var email = $("#email").val();
+            var password = $("#password").val();
+     
+            
+            $.ajax({
+                type: "POST",
+                url: "../Login/TryLogin",
+                data: { email: email, password: password },
+                dataType: "json",
+                success:  function(msg) {
+                    setTimeout(function() {
+                        if (msg === true) {
+                            correctLogin();
+                        } else {
+                            incorrectLogin();
+                        }
+                    }, 1000)}
+            });
+        }
+
+        function correctLogin() {
+            
+            $('#lottie-waiting').addClass("display-none");
+            $('#lottie-correct').removeClass("display-none");
+            var lottieCorrect = document.querySelector("#lottie-correct");
+            lottieCorrect.play();
+
+            setTimeout(function() {window.location.replace("../Home/Index");}, 3000);
+
+
+        }
+
+        function incorrectLogin() {
+            $(".incorrect-login").removeClass("display-none");
+
+            //Może zdarzyć się sytuacja że wprowadzone zostaną złe dane logowania po przekierowaniu np z rejetracji. Wtedy na siebie zostaną nałożone dwa komunikaty. Dlatego w momencie wyświetlania komunikatu o niepoprawnym lohowaniu trzeba ukryć wczesniejsze
+            $("#register-succesfull").addClass("display-none");
+            $("#logout-succesfull").addClass("display-none");
+
+            $(".lottie-login-form").addClass("display-none");
+            $(".login-form").removeClass("display-none");
+        }
+
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+    </script>
+
+</footer>

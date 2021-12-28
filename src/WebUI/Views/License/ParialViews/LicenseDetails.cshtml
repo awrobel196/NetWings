@@ -1,0 +1,176 @@
+﻿@model Application.ViewModels.License.LicenseDashboardViewModel
+
+
+
+<div class="license-container">
+    <p class="license-header">Stan licencji</p>
+    <p class="license-description">
+        Obecnie korzystasz z darmowego planu aplikacji. Twój plan kończy się @Model.LicenseExpired roku. Rozszerz swoją licencję aby obserwować więcej stron lub zapraszać kolejnych użytkowników do Twoich zasobów.
+    </p>
+    <div class="divider-15"></div>
+    <div class="progress-bar-container">
+        <div class="bar" style="width: @(100-Model.DaysLeft)%"></div>
+    </div>
+    <a data-micromodal-trigger="modal-1">Dodaj nowego członka</a>
+</div>
+
+<div class="divider-15"></div>
+<div class="divider-15"></div>
+<div class="deploy-section">
+    <h2>Aktualne zużycie zasobów</h2>
+</div>
+<div class="divider-15"></div>
+<div class="resource-section">
+    <div class="summary-detail-uptime">
+        <p class="item-value">@Model.CurrentWebsites/@Model.MaxWebsites</p>
+        <p class="item-title">Liczba dodanych stron</p>
+    </div>
+
+    <div class="summary-detail-uptime">
+        <p class="item-value">@Model.CurrentUsers/@Model.MaxUsers</p>
+        <p class="item-title">Liczba członków licencji</p>
+    </div>
+
+    <div class="summary-detail-uptime">
+        <p class="item-value">@Model.DaysLeft</p>
+        <p class="item-title">Pozostało dni licencji</p>
+    </div>
+</div>
+
+<div class="divider-15"></div>
+<div class="divider-15"></div>
+<div class="deploy-section">
+    <h2>Członkowie w ramach licencji</h2>
+</div>
+
+<div class="table-items">
+    <table>
+        <thead>
+        <td style="width: 15%; text-align: left;">Użytkownik</td>
+        <td>Email</td>
+        <td>Telefon</td>
+        <td>Operacje</td>
+        </thead>
+
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td style="text-align: left;">
+                    <p class="website-title">@item.Name</p>
+                </td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+                <td>
+                    <a class="license-delete" data-micromodal-trigger="modal-2" onclick="setUserIdForDelte('@item.IdUser')">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
+
+<div class="divider-15"></div>
+<div class="divider-15"></div>
+
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+
+            <main class="modal__content" id="modal-1-content" style="margin-top: 10px;">
+                <p style="text-align: center; font-size: 17px; font-weight: 500;" class="head">
+                    Dodaj nowego członka
+                </p>
+                <div class="divider-10"></div>
+                <p style="text-align: center">
+                    Kiedy nowy członek dołączy do Twojej licencji będziesz z nim współdzielić wsystkie zasoby, które posiadasz w obrębie swojego konta.
+                </p>
+
+                <div class="divider-15"></div>
+                <div class="invite-link"><span>jovial-pascal.34-116-183-172.plesk.page/register?invite=@(Model.ShortIdLicense)</span></div>
+                <div class="divider-10"></div>
+                <p class="footer">
+                    Skopiuj powyższy link i udostępnij osobie aby utworzyła konto się i uzyskała dostęp do Twoich zasobów.
+                </p>
+                <div class="divider-5"></div>
+            </main>
+
+        </div>
+    </div>
+</div>
+<input type="text" id="userIdForDelete" style="display:none"/>
+<div class="modal micromodal-slide" id="modal-2" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+
+            <main class="modal__content" id="modal-1-content">
+                <p style="text-align: center; font-size: 17px; font-weight: 500;" class="head">
+                    Czy na pewno chcesz usunąć członka?
+                </p>
+                <div class="divider-10"></div>
+                <p style="text-align: center">
+                    W momencie usunięcia użytkownik utraci dostęp do swojego konta. Nie będzie mógł zalogować się do serwisu używająć swoich danych.
+                </p>
+                <div class="divider-15"></div>
+                <div class="button-section">
+                    <button class="undo-operation" data-micromodal-close>Anuluj operację</button>
+                    <button class="delete-user" onclick="delteUser()">Usuń członka</button>
+                </div>
+
+
+            </main>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    MicroModal.init();
+
+    var redirectType = getParameterByName('type');
+        if (redirectType === "success") {
+            $("#delete-succesfull").removeClass("display-none");
+        }
+
+        if (redirectType === "fail") {
+            $("#delete-fail").removeClass("display-none");
+        }
+
+
+    function setUserIdForDelte(IdUser) {
+        $("#userIdForDelete").val(IdUser);
+      
+    }
+
+    function delteUser() {
+        var idUser =  $("#userIdForDelete").val();
+        
+        $.ajax({
+            type: "POST",
+            url: "../License/DeleteUserFromLicense",
+            data: { idUser: idUser},
+            dataType: "json",
+            success:  function(msg) {
+                if(msg==true){
+                     window.location.replace("../License/Index?type=success");
+                     $("#create-fail").addClass("display-none");
+                }else{
+                    window.location.replace("../License/Index?type=fail");
+                }
+               
+                }
+        });
+    }
+
+    function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+</script>

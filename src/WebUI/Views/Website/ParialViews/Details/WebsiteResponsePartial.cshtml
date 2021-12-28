@@ -1,0 +1,119 @@
+﻿@model Application.ViewModels.Website.Details.ResponseViewModel
+
+<div id="chart-2"></div>
+<div class="summary-detail-response">
+    <p class="item-value">@Model.AverageResponse ms</p>
+    <p class="item-title">Response (ostatnie 30 dni)</p>
+
+</div>
+
+<script>
+    var options_2 = {
+        stroke: {
+            curve: 'smooth',
+            width: 2, //ustawia odstwpy miedzy kwadratami
+        },
+        chart: {
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 400,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            toolbar: {
+                show: false
+            },
+            height: '150',
+            type: "area"
+            //type:"line"
+        },
+        colors: ["#d5e4ff","#0057FC"],
+        dataLabels: {
+            enabled: false
+        },
+
+
+        series: [
+
+            {
+                type: "area",
+                //type:"line"
+                name: "Średnia",
+                data: [  @foreach (var note in Model.ResponseList.Select(x=>x.ElapsedTime))
+                        {
+                            @(Model.AverageResponse) @:,
+                        }
+                ]
+            },
+            {
+                type: "area",
+                //type:"line"
+                name: "Czas odpowiedzi",
+                data: [  @foreach (var note in Model.ResponseList.Select(x=>x.ElapsedTime))
+                        {
+                            @(note) @:,
+                        }
+                ]
+            },
+
+
+        ],
+        //jeśli typ jest line to gradient robi gradient po bokach (prawa i lewa)
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.6,
+                opacityTo: 0.0,
+                stops: [0, 90, 100]
+            }
+        },
+        grid: {
+            show: false
+        },
+        yaxis: {
+            show: false
+        },
+        tooltip: {
+            show: false,
+        },
+        xaxis: {
+            axisBorder: {
+                show: false
+            },
+            axisTicks: {
+                show: false,
+            },
+            categories: [
+                @foreach (var date in Model.ResponseList.Select(x=>x.TestTime))
+                        {
+                          @:"@(date.ToString("HH:mm dd.MM.yyyy"))" ,
+                        }
+            ],
+            labels: {
+                show: false
+            },
+            tooltip: {
+                enabled: false
+            }
+
+        },
+
+        legend: {
+            show: false
+        },
+        //tooltip: {
+        //    enabled: false
+        //}
+    };
+
+
+</script>
+<script src="~/scripts/response-charts-details.js"></script>

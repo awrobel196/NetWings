@@ -1,0 +1,181 @@
+﻿@model Application.ViewModels.Website.Details.BreadcumbViewModel
+
+<div class="content">
+    <div class="instance-details-breadcumb">
+        
+
+        <img src="~/assets/flags/@(Model.Location)-circle.svg" class="details-avatar">
+        <img src="~/assets/@(Model.Enviroment)-circle.svg" class="details-avatar" style="margin-left: -20px;">
+        <div class="instance-name-details" style="margin-left: 10px;">
+            <p class="instance-name">@Model.Name</p>
+            <p class="instance-url">@Model.Url</p>
+        </div>
+
+        <div class="reload-button" onclick="reload()">
+            <i class="fa-solid fa-rotate"></i>
+        </div>
+
+        <div class="add-button delete-button" data-micromodal-trigger="modal-2" >
+            <i class="fa-solid fa-trash"></i>
+        </div>
+    </div>
+
+    <hr></hr>
+    
+
+    <div class="divider-15"></div>
+    <div class="details-shortcuts-items">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+    </div>
+    <div class="divider-15"></div>
+    <div class="divider-15"></div>
+    <div class="vulnerable-section">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="divider-15"></div>
+    <div class="divider-15"></div>
+    <h2> Uptime instancji</h2>
+    <div class="divider-15"></div>
+    <div class="uptime-section">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <div class="divider-15"></div>
+    <div class="divider-15"></div>
+    <h2> Czas odpowiedzi</h2>
+    <div class="divider-15"></div>
+    <div class="response-section">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="divider-15"></div>
+    <div class="divider-15"></div>
+
+    <h2> Metryki zasobu</h2>
+    <div class="divider-15"></div>
+    <div class="metrics-section">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="divider-15"></div>
+    <div class="divider-15"></div>
+    
+    <h2> Ocena zasobu</h2>
+    <div class="divider-15"></div>
+    <div class="grade-section">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="divider-15"></div>
+    <div class="divider-15"></div>
+    <div class="divider-15"></div>
+  
+ 
+
+
+</div>
+
+<div class="modal micromodal-slide" id="modal-2" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+
+            <main class="modal__content" id="modal-1-content">
+                <p style="text-align: center; font-size: 17px; font-weight: 500;" class="head">
+                    Czy na pewno chcesz usunąć zasób?
+                </p>
+                <div class="divider-10"></div>
+                <p style="text-align: center">
+                    Kiedy usuniesz wybrany zasób wszystkie osoby w obrębie Twojej licencji stracą dostęp do jego archiwalnych oraz przyszłych wyników testów.
+                </p>
+                <div class="divider-15"></div>
+                <div class="button-section">
+                    <button class="undo-operation" data-micromodal-close>Anuluj operację</button>
+                    <button class="delete-user" onclick="delteWebsite('@Model.IdWebsite')">Usuń zasób</button>
+                </div>
+
+
+            </main>
+
+        </div>
+    </div>
+</div>
+
+@section Styles
+{
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+    <link rel="stylesheet" href="~/styles/micromodal.css">
+}
+<script>
+    MicroModal.init();
+
+    function delteWebsite(e) {
+        $.ajax({
+            type: "POST",
+            url: "../Website/DeleteWebsite",
+            data: { idWebsite: e},
+            dataType: "json",
+            success:  function(msg) {
+                window.location.replace("../Website/Index?type=success");
+            }
+        });
+    }
+</script>
+
+<script>$(".details-shortcuts-items").load("../Website/WebsiteMetricsPartial?idWebsite=@(Model.IdWebsite)");</script>
+<script>$(".uptime-section").load("../Website/WebsiteUptimePartial?idWebsite=@(Model.IdWebsite)");</script>
+<script>$(".vulnerable-section").load("../Website/WebsiteVulnerablePartial?idWebsite=@(Model.IdWebsite)");</script>
+<script>$(".response-section").load("../Website/WebsiteResponsePartial?idWebsite=@(Model.IdWebsite)");</script>
+<script>$(".metrics-section").load("../Website/WebsiteTimingsPartial?idWebsite=@(Model.IdWebsite)");</script>
+<script>$(".grade-section").load("../Website/WebsiteGradePartial?idWebsite=@(Model.IdWebsite)");</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script src="~/scripts/backend-frontend-charts-details.js"></script>
+
+<script>
+    function reload() {
+
+        $(".details-shortcuts-items").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
+        $(".uptime-section").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
+        $(".response-section").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
+        $(".metrics-section").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
+        $(".grade-section").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
+
+
+
+        $(".details-shortcuts-items").load("../Website/WebsiteMetricsPartial?idWebsite=@(Model.IdWebsite)");
+        $(".uptime-section").load("../Website/WebsiteUptimePartial?idWebsite=@(Model.IdWebsite)");
+        $(".response-section").load("../Website/WebsiteResponsePartial?idWebsite=@(Model.IdWebsite)");
+        $(".metrics-section").load("../Website/WebsiteTimingsPartial?idWebsite=@(Model.IdWebsite)");
+        $(".grade-section").load("../Website/WebsiteGradePartial?idWebsite=@(Model.IdWebsite)");
+    }
+</script>

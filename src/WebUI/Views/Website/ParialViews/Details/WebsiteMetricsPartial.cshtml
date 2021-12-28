@@ -1,0 +1,62 @@
+﻿@model Application.ViewModels.Website.Details.WebsiteMetricsViewModel
+<div class="item">
+    <div class="item-left">
+        First Contentful Paint
+    </div>
+    <div class="item-right">
+        <div class="item-right-top background-grade-@Model.FirstContentfulPaintGrade">@Model.FirstContentfulPaintDescription</div>
+        <div class="item-right-bottom color-grade-@Model.FirstContentfulPaintGrade background-grade-@Model.FirstContentfulPaintGrade-light">@Model.FirstContentfulPaint ms</div>
+    </div>
+</div>
+
+<div class="item">
+    <div class="item-left">
+        Speed Index
+    </div>
+    <div class="item-right">
+        <div class="item-right-top background-grade-@Model.SpeedIndexGrade">@Model.SpeedIndexDescription</div>
+        <div class="item-right-bottom color-grade-@Model.SpeedIndexGrade background-grade-@Model.SpeedIndexGrade-light">@Model.SpeedIndex ms</div>
+    </div>
+</div>
+
+<div class="item">
+    <div class="item-left">
+       Last Contentful Paint
+    </div>
+    <div class="item-right">
+        <div class="item-right-top background-grade-@Model.LargestContentfulPaintGrade">@Model.LargestContentfulPaintDescription</div>
+        <div class="item-right-bottom color-grade-@Model.LargestContentfulPaintGrade background-grade-@Model.LargestContentfulPaintGrade-light">@Model.LargestContentfulPaint ms</div>
+    </div>
+</div>
+
+<div class="item">
+    <div class="item-left">
+        Time To Interactive
+    </div>
+    <div class="item-right">
+        <div class="item-right-top background-grade-@Model.TimeToInteractiveGrade">@Model.TimeToInteractiveDescription</div>
+        <div class="item-right-bottom color-grade-@Model.TimeToInteractiveGrade background-grade-@Model.TimeToInteractiveGrade-light">@Model.TimeToInteractive ms</div>
+    </div>
+</div>
+
+<div class="item">
+    <div class="item-left">
+        Total Blocking Time
+    </div>
+    <div class="item-right">
+        <div class="item-right-top background-grade-@Model.TotalBlockingTimeGrade">@Model.TotalBlockingTimeDescription</div>
+        <div class="item-right-bottom color-grade-@Model.TotalBlockingTimeGrade background-grade-@Model.TotalBlockingTimeGrade-light">@Model.TotalBlockingTime ms</div>
+    </div>
+</div>
+
+<div class="item">
+    <div class="item-left">
+        Fully Loaded Time
+    </div>
+    <div class="item-right">
+        <div class="item-right-top background-grade-@Model.FullyLoadedTimeGrade">@Model.FullyLoadedTimeDescription</div>
+        <div class="item-right-bottom color-grade-@Model.FullyLoadedTimeGrade background-grade-@Model.FullyLoadedTimeGrade-light">@Model.FullyLoadedTime ms</div>
+    </div>
+</div>
+
+<span>Data ostatniej aktualizacji: @Model.LastTestDate</span>

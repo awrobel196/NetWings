@@ -1,0 +1,36 @@
+﻿@model List<Application.ViewModels.Home.LatestBreakdownWebsiteViewModel>
+
+
+<table>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="align-center" style="font-weight: 400; color: black"><span style="background-color: #eb393b; color: white; padding: 5px; border-radius: 3px">@item.ErrorCode</span></td>
+
+            <td style="text-align: center;">
+                <a asp-controller="Website" asp-action="Details" asp-route-idWebsite="@item.IdWebsite">
+                    <p class="website-title">@item.WebsiteName</p>
+                    <p class="website-url">@item.WebsiteUrl</p>
+                </a>
+            </td>
+            <td style="text-align: center;">
+                <p class="website-title">@item.EventDate</p>
+                <p class="website-url">Data zdarzenia</p>
+            </td>
+            <td style="text-align: center;">
+                <p class="website-title">@item.EventHour</p>
+                <p class="website-url">Godzina zdarzenia</p>
+            </td>
+
+            <td style="text-align: center;">
+                <p class="website-title">@item.RequestTime ms</p>
+                <p class="website-url">Czas request'a</p>
+            </td>
+
+        </tr>
+        <tr class="empty"></tr>
+    }
+
+
+</table>

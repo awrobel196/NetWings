@@ -1,0 +1,42 @@
+﻿<div class="content">
+    <div id="delete-succesfull" class="correct-message display-none">
+        Pomyślnie usunięto istniejący zasób
+    </div>
+
+    <div class="breadcrumbs">
+        <h1>Twoje zasoby</h1>
+        <a asp-controller="Website" asp-action="Create">
+            <div class="add-button">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="website-table-container">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+@section Styles
+{
+    <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+    <link rel="stylesheet" href="~/styles/micromodal.css">
+}
+
+@section Scripts
+{
+    <script>
+        $(".website-table-container").load("../Website/WebsitesTablePartial");
+    </script>
+}

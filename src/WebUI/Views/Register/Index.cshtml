@@ -1,0 +1,128 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="~/styles/reset.css">
+    <link rel="stylesheet" href="~/styles/styles.css"/>
+    <link rel="stylesheet" href="~/styles/styles-mobile.css" media="only screen and (max-device-width: 767px)"/>
+    <link rel="icon" type="image/x-icon" href="/assets/logo.png">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body class="body-login">
+    <div class="login-container">
+        <img src="~/assets/logo-white.png" />
+        <div class="login-form register-form">
+
+            <p>Zarejestruj się</p>
+            <div class="incorrect-login display-none">
+                Taki adres email istnieje już w bazie lub klucz licencji jest nieprawidłowy
+            </div>
+            <div class="divider-15"></div>
+            <div class="divider-15"></div>
+            <input type="text" placeholder="Adres email" id="email">
+            <p class="incorrect-form-value display-none" id="email-alert">Wprowadzono nieprawidłowy adres email</p>
+            <div class="divider-10"></div>
+            <input type="text" placeholder="Imię i nazwisko" id="name">
+            <p class="incorrect-form-value display-none" id="name-alert">Wprowadzono nieprawidłowe imię i nazwisko</p>
+            <div class="divider-10"></div>
+            <input type="text" placeholder="Telefon" id="phone">
+            <p class="incorrect-form-value display-none" id="phone-alert">Wprowadzono nieprawidłowy numer telefonu</p>
+            <div class="divider-10"></div>
+            <input type="password" placeholder="Hasło" id="password">
+            <p class="incorrect-form-value display-none" id="password-alert">Hasło musi mieć co najmniej 8 znaków</p>
+            <a onclick="tryRegister()">Zarejestruj się</a>
+            <div class="divider-10"></div>
+            <span>Masz już konto? <a asp-controller="Login" asp-action="Index">Zaloguj się!</a></span>
+            <div class="divider-10"></div>
+        </div>
+
+        <div class="lottie-login-form display-none">
+            <lottie-player id="lottie-waiting" src="https://assets2.lottiefiles.com/packages/lf20_bgqoyj8l.json"
+                           background="transparent" speed="1" style="width: 300px; height: 450px;" loop autoplay></lottie-player>
+            <lottie-player class="display-none" id="lottie-correct" src="https://assets9.lottiefiles.com/packages/lf20_tubq79fg.json"
+                           background="transparent" speed="1" style="width: 300px; height: 450px;"></lottie-player>
+            <p id="login-loader-text">Trwa tworzenie konta</p>
+        </div>
+    </div>
+
+    <div class="banner_background">
+    </div>
+
+</body>
+
+<footer>
+    <script src="https://unpkg.com/@@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="~/scripts/validate-register-form.js"></script>
+    <script>
+        function tryRegister() {
+            var license = getParameterByName('invite');
+           // $(".lottie-login-form").removeClass("display-none");
+           // $(".login-form").addClass("display-none");
+            var email = $("#email").val();
+            var name = $("#name").val();
+            var phone = $("#phone").val();
+            var password = $("#password").val();
+
+            var validationStatus = validate(email, name, phone, password);
+
+           if (validationStatus) {
+               $(".lottie-login-form").removeClass("display-none");
+               $(".login-form").addClass("display-none");
+
+               $.ajax({
+                   type: "POST",
+                   url: "../Register/TryRegister",
+                   data: { email: email, name:name, phone:phone, password: password, license:license },
+                   dataType: "json",
+                   success:  function(msg) {
+                       setTimeout(function() {
+                           if (msg === true) {
+                               correctRegister();
+                           } else {
+                               incorrectRegister();
+                           }
+                       }, 500)}
+               });
+           }
+
+        }
+
+        function correctRegister() {
+
+            $('#lottie-waiting').addClass("display-none");
+            $('#lottie-correct').removeClass("display-none");
+            var lottieCorrect = document.querySelector("#lottie-correct");
+            lottieCorrect.play();
+
+            setTimeout(function() {
+                window.location.replace("../Login/Index?type=register");
+            }, 3000);
+
+
+        }
+
+        function incorrectRegister() {
+            $(".incorrect-login").removeClass("display-none");
+            $(".lottie-login-form").addClass("display-none");
+            $(".login-form").removeClass("display-none");
+        }
+
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+
+</footer>

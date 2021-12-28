@@ -1,0 +1,178 @@
+﻿@using System.Security.Claims
+@using Application.ViewModels
+
+
+<div class="content">
+    <div id="create-succesfull" class="correct-message display-none">
+        Pomyślnie utworzono nowy zasób. Teraz możesz przeglądać jego wyniki w zakładkach 
+        <a asp-controller="UptimeBenchmark" asp-action="Index" style="font-weight: 700;">Uptime</a> oraz 
+        <a asp-controller="ResponseBenchmark" asp-action="Index" style="font-weight: 700;">Response</a>.
+    </div>
+    
+    <div id="create-fail" class="validation-error display-none">
+        Posiadasz zbyt dużo aktualnych zasobów aby dodać kolejny. Sprawdź swój stan zasobów w zakładce 
+        <a asp-controller="License" asp-action="Index" style="font-weight: 700;">Licencja</a>.
+    </div>
+    
+    <div id="validation-error" class="validation-error display-none">
+       Aby utworzyć nowy zasób uzupełnij wszystkie pola
+    </div>
+
+    <div class="breadcrumbs">
+        <h1>Dodaj nowy zasób</h1>
+
+    </div>
+
+    <div class="deploy-section">
+        <h2>Lokalizacja serwera</h2>
+    </div>
+
+    <div class="divider-15"></div>
+
+    <div class="shortcuts-items">
+        @foreach (EnumToListViewModel item in ViewBag.TestLocation)
+        {
+            <div class="item location-item" id="location-@item.Key" data-key="@item.Key" onclick="setActiveLocation(this.id)">
+                <img src="~/assets/flags/@(item.Value).svg">
+                <p>@item.Value</p>
+            </div>
+        }
+    </div>
+    <div class="divider-15"></div>
+
+    <div class="deploy-section">
+        <h2>System serwera</h2>
+    </div>
+
+    <div class="divider-15"></div>
+
+    <div class="enviroment-items">
+
+        @foreach (EnumToListViewModel item in ViewBag.TestEnviroment)
+        {
+            <div class="item enviroment-item" id="enviroment-@item.Key" data-key="@item.Key" onclick="setActiveEnviroment(this.id)">
+                <img src="~/assets/@(item.Value).svg">
+                <p>@item.Value</p>
+            </div>
+        }
+
+    </div>
+
+    <div class="divider-15"></div>
+
+
+    <div class="deploy-section">
+        <h2>Adres i nazwa strony</h2>
+    </div>
+
+    <div class="divider-15"></div>
+
+    <div class="website-name-items">
+        <label class="floatinglabel" style="width: 48%;">
+
+            <input id="websiteUrl" type="text" placeholder="Wpisz adres strony"
+                   onfocus="this.placeholder = ''" onBlur="this.placeholder = 'Wpisz adres strony'" onkeyup="validateWebsiteName()"/>
+            <span>Wpisz adres strony</span>
+            <p class="incorrect-page-adress display-none">Wprowadzono nieprawidłowy adres strony. Upewnij się, że adres jest w formacie www.nazwastrony.pl</p>
+        </label>
+
+        <label class="floatinglabel" style="width: 48%;">
+
+            <input id="websiteName" type="text" placeholder="Wpisz nazwę strony"
+                   onfocus="this.placeholder = ''"  onBlur="this.placeholder = 'Wpisz nazwę strony'"/>
+            <span>Wpisz nazwę strony</span>
+        </label>
+
+
+    </div>
+
+    <div class="divider-15"></div>
+
+
+</div>
+
+<div class="confirm-button">
+    <a id="addWebsiteButton" onclick="addWebsite()">Dodaj nowy zasób</a>
+</div>
+
+<div class="divider-15"></div>
+<div class="divider-15"></div>
+<div class="divider-15"></div>
+
+@section Scripts
+{
+    <script>
+        var websiteNameIsCorrect = false;
+        var redirectType = getParameterByName('type');
+        if (redirectType === "success") {
+            $("#create-succesfull").removeClass("display-none");
+        }
+
+        if (redirectType === "fail") {
+            $("#create-fail").removeClass("display-none");
+        }
+
+        function validateWebsiteName() {
+            var website = $("#websiteUrl").val();
+
+            if (/^(w{3}[.]\w+[.]\S{2,})$/.test(website)) {
+             
+                $(".incorrect-page-adress").addClass("display-none");
+                websiteNameIsCorrect = true;
+            } else {
+                $(".incorrect-page-adress").removeClass("display-none");
+            }
+        }
+        function setActiveLocation(e) {
+            $(".location-item").removeClass("item-active");
+            $("#"+e+"").addClass("item-active");
+        }
+
+        function setActiveEnviroment(e) {
+            $(".enviroment-item").removeClass("item-active");
+            $("#"+e+"").addClass("item-active");
+        }
+
+        function addWebsite() {
+            var testLoaction = $(".location-item.item-active").attr("data-key");
+            var testEnviroment = $(".enviroment-item.item-active").attr("data-key");
+            var url = $("#websiteUrl").val();
+            var name = $("#websiteName").val();
+
+            if (typeof testLoaction == 'undefined' || typeof testEnviroment == 'undefined' || url == "" || name == "" || websiteNameIsCorrect==false) {
+                $("#validation-error").removeClass("display-none");
+                $("#create-fail").addClass("display-none");
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "../Website/Create",
+                    data: {name:name, url:url, testLoaction:testLoaction,testEnviroment:testEnviroment },
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg == true) {
+                            window.location.replace("../Website/Create?type=success");
+                            $("#create-fail").addClass("display-none");
+                        } else {
+                            window.location.replace("../Website/Create?type=fail");
+                        }
+
+                    }
+                });
+            }
+
+            
+         
+        }
+
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+    </script>
+}
