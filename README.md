@@ -1,6 +1,6 @@
 # Dokumentacja NetWings ![alt text](https://img.shields.io/badge/Aplikacja-1.0-blue) ![alt text](https://img.shields.io/badge/Dokumentacja-1.2-green)
 ![Netwings logo](https://github.com/awrobel196/NetWings/blob/main/src/WebUI/wwwroot/assets/logo-dark.png#gh-light-mode-only)
-![Netwings logo](https://github.com/awrobel196/NetWings/blob/main/src/WebUI/wwwroot/assets/logo-light.png#gh-dark-mode-only)
+![Netwings logo](https://github.com/awrobel196/NetWings/blob/main/src/WebUI/wwwroot/assets/logo-white.png#gh-dark-mode-only)
 
 ## Netwings
 #### Demo
