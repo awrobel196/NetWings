@@ -4,7 +4,7 @@
 
 ## Netwings
 #### Demo
-Demo aplikacji dostępne pod adresem: https://jovial-pascal.34-116-183-172.plesk.page/
+Demo aplikacji dostępne pod adresem: https://mystifying-merkle.188-34-164-7.plesk.page/
 
 #### O aplikacji
 NetWings to aplikacja webowa pozwalająca na monitoring stron internetowych pod kątem ich dostępności, jakości oraz bezpieczeństwa. Platforma agreguje dane pobierane przy użyciu publicznych API i w prosty spoób przedstawia je użytkownikowi. Głównym mechanizmem platformy jest monitorowanie staturu `up` oraz `down` dodanej przez użytkownika strony internetowej. Wszelkie zmiany w tym zakresie zgłaszane są użytkownikowy za pomocą bramki SMS. 
